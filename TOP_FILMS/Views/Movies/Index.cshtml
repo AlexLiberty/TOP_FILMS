@@ -1,0 +1,34 @@
+﻿@model IEnumerable<TOP_FILMS.Models.Movie>
+
+@{
+    ViewData["Title"] = "Top Films";
+}
+
+<h1>Top Films</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+@foreach (var item in Model)
+{
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="@item.PosterUrl" class="img-fluid rounded-start" alt="@item.Title" style="max-height: 500px; max-width: 300px;">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Title (@item.ReleaseYear)</h5>
+                    <p class="card-text"><strong>Genre:</strong> @item.Genre</p>
+                    <p class="card-text">@item.Description</p>
+                    <div>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> 
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">Details</a> 
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
