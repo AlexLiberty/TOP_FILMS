@@ -8,21 +8,21 @@
 
 @foreach (var item in Model)
 {
-    <div class="card mb-3">
+    <div class="card mb-3 my-class">
         <div class="row g-0">
             <div class="col-md-4">
-                <img src="@item.PosterUrl" class="img-fluid rounded-start" alt="@item.Title" style="max-height: 500px; max-width: 300px;">
+                <img src="@item.PosterUrl" class="img-fluid rounded-start" alt="@item.Title">
+                <div class="button-index">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                </div>
             </div>
             <div class="col-md-8">
                 <div class="card-body">
                     <h5 class="card-title">@item.Title (@item.ReleaseYear)</h5>
                     <p class="card-text"><strong>Genre:</strong> @item.Genre</p>
-                    <p class="card-text">@item.Description</p>
-                    <div>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> 
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">Details</a> 
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                    </div>
+                    <p class="card-text">@item.Description</p> 
                 </div>
             </div>
         </div>
