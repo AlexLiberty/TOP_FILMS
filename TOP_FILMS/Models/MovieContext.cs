@@ -7,7 +7,6 @@ namespace TOP_FILMS.Models
         public DbSet<Movie> Movies { get; set; }
         public MovieContext(DbContextOptions<MovieContext> options) : base(options) 
         {
-            Database.EnsureDeleted();
             if (Database.EnsureCreated())
             {
                 Movies?.Add(new Movie
