@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TOP_FILMS.Models;
+using static System.Net.WebRequestMethods;
 
 namespace TOP_FILMS.Controllers
 {
@@ -51,8 +52,9 @@ namespace TOP_FILMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RequestSizeLimit(1000000000)]
-        public async Task<IActionResult> Create([Bind("Id,Title,Genre,ReleaseYear,Description")] Movie movie, IFormFile imageFile)
+        public async Task<IActionResult> Create([Bind("Id,Title,Genre,ReleaseYear,Description")] Movie movie, IFormFile? imageFile)
         {
+            ModelState.Remove("ImagePath");
             if (ModelState.IsValid)
             {
                 if (imageFile != null && imageFile.Length > 0)
@@ -64,7 +66,11 @@ namespace TOP_FILMS.Controllers
                     {
                         await imageFile.CopyToAsync(stream);
                     }
-                    movie.ImagePath = $"~/Files/{uniqueFileName}";
+                    movie.ImagePath = $"/Files/{uniqueFileName}";
+                }
+                else
+                {
+                    movie.ImagePath = "https://ikinogo.biz/uploads/mini/short/21/3b7daac61aa607060ec1a212750594.webp";
                 }
 
                 _context.Add(movie);
@@ -96,24 +102,37 @@ namespace TOP_FILMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RequestSizeLimit(1000000000)]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Genre,ReleaseYear,Description,ImagePath")] Movie movie, IFormFile imageFile)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Genre,ReleaseYear,ImagePath,Description")] Movie movie, IFormFile? imageFile)
         {
             if (id != movie.Id)
-            {
+            {                
                 return NotFound();
             }
 
+            ModelState.Remove("ImagePath");
+
             if (ModelState.IsValid)
             {
-                if (imageFile != null && imageFile.Length > 0)
+                var existingMovie = await _context.Movies.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+                if (existingMovie == null)
                 {
-                    string path = "/Files/" + imageFile.FileName;
+                    return NotFound();
+                }
 
-                    using (var stream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                if (imageFile != null)
+                {
+                    var uploadsFolder = Path.Combine(_appEnvironment.WebRootPath, "Files");
+                    var uniqueFileName = $"{Guid.NewGuid().ToString()}_{imageFile.FileName}";
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await imageFile.CopyToAsync(stream);
                     }
-                    movie.ImagePath = path;
+                    movie.ImagePath = $"/Files/{uniqueFileName}";
+                }
+                else
+                {
+                    movie.ImagePath = existingMovie.ImagePath;
                 }
 
                 _context.Update(movie);
