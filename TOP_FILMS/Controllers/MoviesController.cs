@@ -7,12 +7,12 @@ namespace TOP_FILMS.Controllers
     public class MoviesController : Controller
     {
         private readonly MovieContext _context;
-        private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _appEnvironment;
 
-        public MoviesController(MovieContext context, IWebHostEnvironment hostingEnvironment)
+        public MoviesController(MovieContext context, IWebHostEnvironment appEnvironment)
         {
             _context = context;
-            _hostingEnvironment = hostingEnvironment;
+            _appEnvironment = appEnvironment;
         }
 
         // GET: Movies
@@ -50,13 +50,14 @@ namespace TOP_FILMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RequestSizeLimit(1000000000)]
         public async Task<IActionResult> Create([Bind("Id,Title,Genre,ReleaseYear,Description")] Movie movie, IFormFile imageFile)
         {
             if (ModelState.IsValid)
             {
                 if (imageFile != null && imageFile.Length > 0)
                 {
-                    var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "Files");
+                    var uploadsFolder = Path.Combine(_appEnvironment.WebRootPath, "Files");
                     var uniqueFileName = $"{Guid.NewGuid().ToString()}_{imageFile.FileName}";
                     var filePath = Path.Combine(uploadsFolder, uniqueFileName);
                     using (var stream = new FileStream(filePath, FileMode.Create))
@@ -94,6 +95,7 @@ namespace TOP_FILMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RequestSizeLimit(1000000000)]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Genre,ReleaseYear,Description,ImagePath")] Movie movie, IFormFile imageFile)
         {
             if (id != movie.Id)
@@ -103,35 +105,20 @@ namespace TOP_FILMS.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                if (imageFile != null && imageFile.Length > 0)
                 {
-                    if (imageFile != null && imageFile.Length > 0)
+                    var uploadsFolder = Path.Combine(_appEnvironment.WebRootPath, "Files");
+                    var uniqueFileName = $"{Guid.NewGuid().ToString()}_{imageFile.FileName}";
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "Files");
-                        var uniqueFileName = $"{Guid.NewGuid().ToString()}_{imageFile.FileName}";
-                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await imageFile.CopyToAsync(stream);
-                        }
-                        movie.ImagePath = $"~/Files/{uniqueFileName}";
+                        await imageFile.CopyToAsync(stream);
                     }
+                    movie.ImagePath = $"~/Files/{uniqueFileName}";
+                }
 
-                    _context.Update(movie);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MovieExists(movie.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(movie);
+                await _context.SaveChangesAsync();
             }
             return View(movie);
         }
