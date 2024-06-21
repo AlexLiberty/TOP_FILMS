@@ -107,18 +107,18 @@ namespace TOP_FILMS.Controllers
             {
                 if (imageFile != null && imageFile.Length > 0)
                 {
-                    var uploadsFolder = Path.Combine(_appEnvironment.WebRootPath, "Files");
-                    var uniqueFileName = $"{Guid.NewGuid().ToString()}_{imageFile.FileName}";
-                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    string path = "/Files/" + imageFile.FileName;
+
+                    using (var stream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                     {
                         await imageFile.CopyToAsync(stream);
                     }
-                    movie.ImagePath = $"~/Files/{uniqueFileName}";
+                    movie.ImagePath = path;
                 }
 
                 _context.Update(movie);
                 await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
             return View(movie);
         }
