@@ -27,13 +27,12 @@
                 <label asp-for="ReleaseYear" class="control-label"></label>
                 <input asp-for="ReleaseYear" class="form-control" />
                 <span asp-validation-for="ReleaseYear" class="text-danger"></span>
-            </div><br>
+            </div> 
             <div class="form-group">
                 <label asp-for="ImagePath" class="control-label"></label>
                 <input type="file" id="imageFile" name="imageFile" class="form-control" />
                 <span asp-validation-for="ImagePath" class="text-danger"></span>
-                <img id="imagePreview" src="@Url.Content(Model.ImagePath)" alt="Image preview" style="max-width: 200px;" />
-            </div><br>
+            </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
@@ -44,6 +43,10 @@
                 <a asp-action="Index" class="btn btn-secondary bb">Back to List</a>
             </div>
         </form>
+    </div>
+    <div class="col-md-6">
+        <img id="imagePreview" src="@Url.Content(Model.ImagePath)" alt="Image preview" style="max-width: 300px; height: auto; margin-top: 35px; margin-left: 350px;" />
+        <img id="imagePreview" src="#" alt="Image preview" style="max-width: 100%; height: auto; display: none; margin-top: 35px; margin-left: 200px;" />
     </div>
 </div>
 
@@ -57,15 +60,17 @@
                 var reader = new FileReader();
 
                 reader.onload = function (e) {
-                    $('#imagePreview').attr('src', e.target.result);
+                    $('#imagePreview').attr('src', e.target.result).show();
                 };
 
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        $("#imageFile").change(function () {
-            readURL(this);
+        $(document).ready(function () {
+            $("#imageFile").change(function () {
+                readURL(this);
+            });
         });
     </script>
 }
