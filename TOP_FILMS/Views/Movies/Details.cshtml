@@ -9,18 +9,18 @@
 <div class="card mb-3">
     <div class="row g-0 my-class">
         <div class="col-md-44">
-            <img src="@Model.PosterUrl" class="img-fluid rounded-start" alt="@Model.Title">
-        </div>
+            <img src="@Model.ImagePath" class="img-fluid rounded-start" alt="@Model.Title">
+            <div class="button">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary ee">Edit</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger dd">Delete</a>
+                <a asp-action="Index" class="btn btn-secondary bb">Back to List</a>
+            </div>
+        </div> 
         <div class="col-md-8">
             <div class="card-body">
                 <h5 class="card-title">@Model.Title (@Model.ReleaseYear)</h5>
                 <p class="card-text"><strong>Genre:</strong> @Model.Genre</p>
                 <p class="card-text">@Model.Description</p>
-                <div class="button">
-                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
-                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-                </div>
             </div>
         </div>
     </div>

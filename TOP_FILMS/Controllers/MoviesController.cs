@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TOP_FILMS.Models;
 
@@ -12,10 +7,12 @@ namespace TOP_FILMS.Controllers
     public class MoviesController : Controller
     {
         private readonly MovieContext _context;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public MoviesController(MovieContext context)
+        public MoviesController(MovieContext context, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         // GET: Movies
@@ -53,10 +50,22 @@ namespace TOP_FILMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Genre,ReleaseYear,PosterUrl,Description")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Id,Title,Genre,ReleaseYear,Description")] Movie movie, IFormFile imageFile)
         {
             if (ModelState.IsValid)
             {
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "Files");
+                    var uniqueFileName = $"{Guid.NewGuid().ToString()}_{imageFile.FileName}";
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+                    movie.ImagePath = $"~/Files/{uniqueFileName}";
+                }
+
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -85,7 +94,7 @@ namespace TOP_FILMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Genre,ReleaseYear,PosterUrl,Description")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Genre,ReleaseYear,Description,ImagePath")] Movie movie, IFormFile imageFile)
         {
             if (id != movie.Id)
             {
@@ -96,6 +105,18 @@ namespace TOP_FILMS.Controllers
             {
                 try
                 {
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "Files");
+                        var uniqueFileName = $"{Guid.NewGuid().ToString()}_{imageFile.FileName}";
+                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+                        movie.ImagePath = $"~/Files/{uniqueFileName}";
+                    }
+
                     _context.Update(movie);
                     await _context.SaveChangesAsync();
                 }

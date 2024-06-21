@@ -11,11 +11,9 @@
     <div class="card mb-3 my-class">
         <div class="row g-0">
             <div class="col-md-4">
-                <img src="@item.PosterUrl" class="img-fluid rounded-start" alt="@item.Title">
+                <img src="@item.ImagePath" class="img-fluid rounded-start" alt="@item.Title">
                 <div class="button-index">
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary ddd">Details</a>
                 </div>
             </div>
             <div class="col-md-8">

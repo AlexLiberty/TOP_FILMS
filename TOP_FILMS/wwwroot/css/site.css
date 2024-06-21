@@ -26,7 +26,8 @@ body {
 
 .button {
     
-    margin-top: 35%;
+    margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 .button-index {
@@ -57,4 +58,107 @@ body {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     background: linear-gradient(to right, rgb(141, 252, 76), #ee76e6);
+}
+
+.container-fluid {
+    margin-left: 40%;
+}
+
+.bbb {
+    margin: 5px;
+    border: solid 1px gray;
+    border-radius: 5px;
+    background-color: #d464f4;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+    .bbb:hover {
+        opacity: 0.7;
+        background-color: #d464f4;
+    }
+
+.ddd {
+    border: solid 1px gray;
+    border-radius: 5px;
+    background-color: #2ab1c9;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    width: 100%;
+}
+
+    .ddd:hover {
+        opacity: 0.7;
+        background-color: #2ab1c9;
+    }
+
+.rounded-start{
+    border-radius: 4px;
+}
+
+.ee {
+    border: solid 1px gray;
+    border-radius: 5px;
+    background-color: #f5e513;
+    color: black;
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    width: 30%;
+}
+
+    .ee:hover {
+        opacity: 0.7;
+        background-color: #f5e513;
+        color: black;
+    }
+.dd {
+    border: solid 1px gray;
+    border-radius: 5px;
+    background-color: #ec0707;
+    color: black;
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    width: 27%;
+}
+
+    .dd:hover {
+        opacity: 0.7;
+        background-color: #ec0707;
+        color: black;
+    }
+.bb {
+    border: solid 1px gray;
+    border-radius: 5px;
+    background-color: #d464f4;
+    color: black;
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    width: 40%;
+}
+
+    .bb:hover {
+        opacity: 0.7;
+        background-color: #d464f4;
+        color: black;
+    }
+
+.ss {
+    border: solid 1px gray;
+    border-radius: 5px;
+    background-color: #48e945;
+    color: black;
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    width: 40%;
+}
+
+    .ss:hover {
+        opacity: 0.7;
+        background-color: #48e945;
+        color: black;
+    }
+
+.form-control{
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 }
